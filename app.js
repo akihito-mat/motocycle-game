@@ -17,7 +17,7 @@ var perm = [];
 /*　Math.floor()は小数点以下を無視し整数だけを取る関数。
 　　Math.random()*255 は0から255の数字をてきとうにピックアップ*/ 
 while (perm.length < 255){
-    while (perm.includes(val = Math.floor(Math.random()*255{
+    while (perm.includes(val = Math.floor(Math.random()*255))){
     perm.push(val);
     }
 }
@@ -29,7 +29,7 @@ var noise = x => {
     return;
 }
 
-requestAnimationFrame()メソッドは
+/*requestAnimationFrame()メソッドは
 ブラウザにアニメーションを行いたいことを知らせ、
 指定した関数を呼び出して次の再描画前にアニメーションを
 リセットすることを要求する*/
