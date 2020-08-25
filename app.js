@@ -58,6 +58,8 @@ var player = new function(){
             grounded = 1;
         }
 
+        
+
         var angle = Math.atan2((p2 - 15) - this.y, (this.x + 5) - this.x);//向かい来る斜面の座標からバイクの角度を決定
 
         this.rot = angle;
@@ -69,7 +71,12 @@ var player = new function(){
             this.rSpeed = this.rSpeed - (angle - this.rot);
         }
 
-        this.rot +=this.rSpeed * 0.1;
+        this.rSpeed += (k.ArrowLeft - k.ArrowRight) * 0.5;
+        this.rot -=this.rSpeed * 0.1;
+
+        if(this.rot > Math.PI) this.rot = -Math.PI;
+        if(this.rot < -Math.PI) this.rot = Math.PI;
+        
 
 
         ctx.save();
@@ -83,13 +90,15 @@ var player = new function(){
 
 var t = 0;
 
+var k = {ArrowUp: 0, ArrowDown: 0, ArrowLeft: 0, ArrowRight: 0};
+
 /*requestAnimationFrame()メソッドは
 ブラウザにアニメーションを行いたいことを知らせ、
 指定した関数を呼び出して次の再描画前にアニメーションを
 リセットすることを要求する*/
 function loop(){
-
-    t += 3;
+    speed -= (speed - (k.ArrowUp - k.ArrowDown)) * 0.1;
+    t += 3 * speed;
     ctx.fillStyle = "skyblue"; //背景色を定義
     ctx.fillRect(0, 0, c.width, c.height);
     ctx.fillStyle = "black"; //山の色を定義
@@ -106,6 +115,10 @@ function loop(){
     player.draw();
     requestAnimationFrame(loop);
 }
+/*キー操作 */
+onkeydown = d => k[d.key] = 1;
+onkeyup = d => k[d.key] = 0;
+
 //loopの実行
 loop();
 
