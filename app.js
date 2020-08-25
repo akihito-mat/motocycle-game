@@ -6,8 +6,8 @@ var c = document.createElement("canvas");
 2dは二次元の意味*/
 var ctx = c.getContext("2d");
 //canvasの大きさを設定
-c.width = 500;
-c.height = 350;
+c.width = 600;
+c.height = 400;
 /*作製したcontextをHtMLのbodyに追加*/
 document.body.appendChild(c);
 /*loopという関数を作る。
@@ -30,6 +30,38 @@ var noise = x => {
     return lerp (perm[Math.floor(x)], perm[Math.ceil(x)], x - Math.floor(x));
 }
 
+/*プレイヤーの描画
+ */
+var player = new function(){
+    this.x = c.width / 2;
+    this.y = 0;
+    this.ySpeed = 0;
+    this.rot = 0;
+
+    this.img = new Image();
+    this.img.src = "image/moto.png";
+
+
+    this.draw = function(){
+        var p1 = c.height - noise(t + this.x)*0.25;
+        if(p1 - 15 > this.y){
+            this.ySpeed += 0.1;
+        }else{
+            this.ySpeed -= this.y - (p1 - 15);
+            this.y = p1 - 15;
+        }
+
+        this.y += this.ySpeed;
+
+
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.drawImage(this.img, -15, -15, 30, 30);
+
+        ctx.restore();
+    }
+}
+
 var t = 0;
 
 /*requestAnimationFrame()メソッドは
@@ -38,10 +70,10 @@ var t = 0;
 リセットすることを要求する*/
 function loop(){
 
-    t += 1;
-    ctx.fillStyle = "skyblue";
+    t += 3;
+    ctx.fillStyle = "skyblue"; //背景色を定義
     ctx.fillRect(0, 0, c.width, c.height);
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "black"; //山の色を定義
 
     ctx.beginPath(); //山の線を描画
     ctx.moveTo(0, c.height);
@@ -51,6 +83,8 @@ function loop(){
     ctx.lineTo(c.width, c.height);
 
     ctx.fill();
+
+    player.draw();
     requestAnimationFrame(loop);
 }
 //loopの実行
