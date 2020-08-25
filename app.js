@@ -6,8 +6,8 @@ var c = document.createElement("canvas");
 2dは二次元の意味*/
 var ctx = c.getContext("2d");
 //canvasの大きさを設定
-c.width = 600;
-c.height = 400;
+c.width = 1000;
+c.height = 500;
 /*作製したcontextをHtMLのbodyに追加*/
 document.body.appendChild(c);
 /*loopという関数を作る。
@@ -58,15 +58,20 @@ var player = new function(){
             grounded = 1;
         }
 
-        
+        if(!playing || grounded && Math.abs(this.rot) > Math.PI * 0.5){
+            playing = false;
+            this.rSpeed = 5;
+            k.ArrowUp = 1;
+            this.x -= speed * 2.5;
+        }
 
         var angle = Math.atan2((p2 - 15) - this.y, (this.x + 5) - this.x);//向かい来る斜面の座標からバイクの角度を決定
 
-        this.rot = angle;
+        // this.rot = angle;
 
         this.y += this.ySpeed;
 
-        if(grounded) {
+        if(grounded && playing) {
             this.rot -= (this.rot - angle)*0.5;
             this.rSpeed = this.rSpeed - (angle - this.rot);
         }
@@ -89,8 +94,11 @@ var player = new function(){
 }
 
 var t = 0;
-
+var speed = 0;
+var playing = true;
 var k = {ArrowUp: 0, ArrowDown: 0, ArrowLeft: 0, ArrowRight: 0};
+
+
 
 /*requestAnimationFrame()メソッドは
 ブラウザにアニメーションを行いたいことを知らせ、
