@@ -22,20 +22,35 @@ while (perm.length < 255){
     }
 }
 
-var lerp = (a, b, t) => a+(b-a)*t;
+var lerp = (a, b, t) => a+(b-a)*(1 - Math.cos(t * Math.PI)) / 2;
 /*斜面の山を示す.
 noise関数はランダムだが自然界にありそうなフィボナッチ的な数*/
 var noise = x => {
-    return;
+    x = x * 0.01 % 255;
+    return lerp (perm[Math.floor(x)], perm[Math.ceil(x)], x - Math.floor(x));
 }
+
+var t = 0;
 
 /*requestAnimationFrame()メソッドは
 ブラウザにアニメーションを行いたいことを知らせ、
 指定した関数を呼び出して次の再描画前にアニメーションを
 リセットすることを要求する*/
 function loop(){
+
+    t += 1;
     ctx.fillStyle = "skyblue";
     ctx.fillRect(0, 0, c.width, c.height);
+    ctx.fillStyle = "black";
+
+    ctx.beginPath(); //山の線を描画
+    ctx.moveTo(0, c.height);
+    for (var i = 0; i < c.width; i++){
+        ctx.lineTo(i, c.height - noise(t + i) * 0.25);    //山の斜面を左から右へ描画
+    }
+    ctx.lineTo(c.width, c.height);
+
+    ctx.fill();
     requestAnimationFrame(loop);
 }
 //loopの実行
