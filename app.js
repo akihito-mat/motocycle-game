@@ -37,6 +37,7 @@ var player = new function(){
     this.y = 0;
     this.ySpeed = 0;
     this.rot = 0;
+    this.grounded = 0;
 
     this.img = new Image();
     this.img.src = "image/moto.png";
@@ -44,18 +45,36 @@ var player = new function(){
 
     this.draw = function(){
         var p1 = c.height - noise(t + this.x)*0.25;
+        var p2 = c.height - noise(t + 5 + this.x)*0.25;
+        
+        var grounded = 0
+
         if(p1 - 15 > this.y){
-            this.ySpeed += 0.1;
+            this.ySpeed += 0.1;//重力によりバイクが落ちるスピードが上がっていく
         }else{
-            this.ySpeed -= this.y - (p1 - 15);
+            this.ySpeed -= this.y - (p1 - 15);//バイクのバウンド
             this.y = p1 - 15;
+
+            grounded = 1;
         }
 
+        var angle = Math.atan2((p2 - 15) - this.y, (this.x + 5) - this.x);//向かい来る斜面の座標からバイクの角度を決定
+
+        this.rot = angle;
+
         this.y += this.ySpeed;
+
+        if(grounded) {
+            this.rot -= (this.rot - angle)*0.5;
+            this.rSpeed = this.rSpeed - (angle - this.rot);
+        }
+
+        this.rot +=this.rSpeed * 0.1;
 
 
         ctx.save();
         ctx.translate(this.x, this.y);
+        ctx.rotate(this.rot);
         ctx.drawImage(this.img, -15, -15, 30, 30);
 
         ctx.restore();
