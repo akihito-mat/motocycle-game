@@ -113,7 +113,7 @@ function loop(){
 
     ctx.beginPath(); //山の線を描画
     ctx.moveTo(0, c.height);
-    for (var i = 0; i < c.width; i++){
+    for (let i = 0; i < c.width; i++){
         ctx.lineTo(i, c.height - noise(t + i) * 0.25);    //山の斜面を左から右へ描画
     }
     ctx.lineTo(c.width, c.height);
